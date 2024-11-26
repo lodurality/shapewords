@@ -48,7 +48,7 @@
             <span class="author-block">
               <a href="https://lodurality.github.io/">Dmitry Petrov</a><sup>1</sup>,</span>
             <span class="author-block">
-              <a href="https://www.linkedin.com/in/pradyumn-goyal/">Pradyumn Goyal</a><sup>1</sup>,</span>
+              <a href="https://prady1272.github.io/">Pradyumn Goyal</a><sup>1</sup>,</span>
             <span class="author-block">
               <a href="https://www.linkedin.com/in/divyanshshivashok">Divyansh Shivashok</a><sup>1</sup>,
             </span>
@@ -146,7 +146,7 @@
           </video> -->
       <!-- </video> -->
       <h2 class="subtitle has-text-centered">
-        <b>TLDR;</b> We introduce <em>ShapeWords</em>, an approach image generation via 3D-guided text prompts. It&nbsp;generates diverse images that are consistent both with target geometries and prompts 
+        <b>TLDR;</b> We introduce <em>ShapeWords</em>, an approach for image generation via 3D-guided text prompts. It&nbsp;generates diverse images that are consistent both with target geometries and prompts 
       </h2>
     </div>
   </div>
@@ -156,7 +156,7 @@
 <section class="hero is-light is-small">
   <div class="hero-body">
     <div class="container is-max-desktop">
-      <h2 class="subtitle has-text-centered"><em>ShapeWords</em> generalize across styles and compositional settings (guided word is shown in <b>bold</b>)</h2>
+      <h2 class="subtitle has-text-centered"><em>ShapeWords</em> generalizes across styles and compositional settings (guided word is shown in <b>bold</b>)</h2>
       <div id="results-carousel-face" class="carousel results-carousel">
         <div class="item chair-bosch">
           <div class="carousel-content">
@@ -239,7 +239,7 @@
         <div class="item table-workshop">
          <div class="carousel-content">
             <h3 class="subtitle has-text-centered">
-        <q>A <b>table</b> in a workshop</q><br>&nbsp;
+        <q>A <b>table</b> in a workshop</q>
       </h3>
             <img src="static/images/examples/table_workshop.jpg"
                    alt="A table in a workshop"/>
@@ -347,7 +347,7 @@ ShapeWords incorporates target 3D shape information within specialized tokens em
         <div class="columns is-vcentered interpolation-panel">
           <div class="column is-full-width has-text-justified">
             <img src="static/images/arch_web.png" alt="Method Overview">
-            <p> During training (I), <em>ShapeWords</em> takes as input triplet of a shape, a prompt, and an image. The shape S and prompt T are encoded using the shape encoder PointBert and the text encoder OpenCLIP, respectively. The resulting embeddings are passed through a cross-attention-based Shape2CLIP module, which produces a prompt residual δT to guide the source prompt toward the target geometry. This modified prompt is then passed as input to a Text-to-Image Denoising UNet along with sampled noisy image latents and time step t. The Shape2CLIP module is optimized via Score Distillation Sampling. During inference (II), the CLIP embeddings of the input prompt and the a            rget embeddings of the test shape are passed through the Shape2CLIP module. Optionally, the desired strength of the shape guidance is controlled by the user parameter λ. For additional details about training data and implementation please refer to the paper.   <p>
+            <p> During training (I), <em>ShapeWords</em> takes as input triplet of a shape, a prompt, and an image. The shape S and prompt T are encoded using the shape encoder PointBert and the text encoder OpenCLIP, respectively. The resulting embeddings are passed through a cross-attention-based Shape2CLIP module, which produces a prompt residual δT to guide the source prompt toward the target geometry. This modified prompt is then passed as input to a Text-to-Image Denoising UNet along with sampled noisy image latents and time step t. The Shape2CLIP module is optimized via Score Distillation Sampling. During inference (II), the CLIP embeddings of the input prompt and the target embeddings of the test shape are passed through the Shape2CLIP module. Optionally, the desired strength of the shape guidance is controlled by the user parameter λ. For additional details about training data and implementation please refer to the paper.   <p>
           </div>
         </div>
             
@@ -675,7 +675,7 @@ ShapeWords incorporates target 3D shape information within specialized tokens em
             
             <div>
             
-            We thank Vikas Thamizharasan, Cecilia Ferrando and Matheus Gadelha for providing useful feedback and input to our project.
+            We thank Vikas Thamizharasan, Cecilia Ferrando, Deep Chakraborty and Matheus Gadelha for providing useful feedback and input to our project.
           </div>
         </div>
             
