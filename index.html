@@ -56,16 +56,17 @@
               <a href="https://scholar.google.com/citations?user=dwIyWrEAAAAJ&hl=en">Yuanming Tao</a><sup>1</sup>,
             </span>
             <span class="author-block">
-              <a href="https://melinos.github.io/">Melinos Averkiou</a><sup>2</sup>,
+              <a href="https://melinos.github.io/">Melinos Averkiou</a><sup>2,3</sup>,
             </span>
             <span class="author-block">
-              <a href="https://kalo-ai.github.io/">Evangelos Kalogerakis</a><sup>1,2,3</sup>
+              <a href="https://kalo-ai.github.io/">Evangelos Kalogerakis</a><sup>1,2,4</sup>
             </span>
           </div>
 
           <div class="is-size-5 publication-authors">
             <span class="author-block"><sup>1</sup>UMass Amherst&nbsp;&nbsp;&nbsp;</span>
             <span class="author-block"><sup>2</sup>CYENS CoE&nbsp;&nbsp;&nbsp;</span>
+            <span class="author-block"><sup>2</sup>University of Cyprus&nbsp;&nbsp;&nbsp;</span>
              <span class="author-block"><sup>3</sup>TU Crete</span>
           </div>
 
@@ -409,12 +410,7 @@ ShapeWords incorporates target 3D shape information within specialized tokens em
                
                <tr>
 
-                   <!-- <td>
-                       <img id="image-horses" src="supp/horses_6_20.png" alt="Multi-Concept 1">
-                       <br>Horse<br> <br>
-                       Orientation <input type="range" id="slider-horsesa" min="2" max="10" step="2">
-                       <br>Illumination <input type="range" id="slider-horsesb" min="14" max="27">
-                   </td> -->
+                
                    <td style="padding: 5px;">
                        <p style="font-family: Courier; font-size: 18px;"><q>A charcoal drawing of a <b>lamp</b></q></p>
                        <br>
@@ -444,12 +440,7 @@ ShapeWords incorporates target 3D shape information within specialized tokens em
                
                <tr>
 
-                   <!-- <td>
-                       <img id="image-horses" src="supp/horses_6_20.png" alt="Multi-Concept 1">
-                       <br>Horse<br> <br>
-                       Orientation <input type="range" id="slider-horsesa" min="2" max="10" step="2">
-                       <br>Illumination <input type="range" id="slider-horsesb" min="14" max="27">
-                   </td> -->
+                
                    <td style="padding: 5px;">
                        <p style="font-family: Courier; font-size: 18px;"><q>A Hieronymus Bosch's painting of a <b>chair</b></q></p>
                        <br>
@@ -479,26 +470,10 @@ ShapeWords incorporates target 3D shape information within specialized tokens em
            </table>
           
            <script>
-               // JavaScript code will go here
-               // Function to update the image source
+       
            function updateImage(sliderId, imageId, baseName) {
-               // illumination_strings = ["taxis_", "lions_8_", "car_10_", "tiger_10_", "table_10_"]
-               // var sliderValue = 0;
-               // console.log(baseName)
-               // if(illumination_strings.includes(baseName)){
-                 // /sliderValue = 14 + 27 - document.getElementById(sliderId).value;
-               // }/
-               // else if(baseName=="vacuum_10_"){
-                 // sliderValue = 16 + 27 - document.getElementById(sliderId).value;
-               // }
-               // else{
                  sliderValue = document.getElementById(sliderId).value;
-               // }
-               // if(baseName.includes(dollyzoom))
                var newImagePath = "sliders/" + baseName + sliderValue + ".jpg";
-               // console.log(newImagePath) // Adjust this path as per your images
-
-
                document.getElementById(imageId).src = newImagePath;
            }
 
@@ -507,14 +482,9 @@ ShapeWords incorporates target 3D shape information within specialized tokens em
            function updateMultiConceptImage(baseId, baseName) {
                var sliderValueA = document.getElementById(baseId + "a").value;
 
-               //illumination_strings = ["aquarelle"]
-               //var sliderValueB = 0;
-               // console.log(baseName)
                var sliderValueB = document.getElementById(baseId + "b").value;
                
-               // var sliderValueB = document.getElementById(baseId + "b").value;
                var newImagePath = "mult_sliders/" + baseName + "_" + sliderValueA + "_" + sliderValueB + ".jpg";
-               // console.log("image-" + baseId) // Adjust this path as per your images
                document.getElementById("image-" + baseName).src = newImagePath;
            }
 
@@ -675,7 +645,7 @@ ShapeWords incorporates target 3D shape information within specialized tokens em
             
             <div>
             
-            We thank Vikas Thamizharasan, Cecilia Ferrando, Deep Chakraborty and Matheus Gadelha for providing useful feedback and input to our project.
+            We thank Vikas Thamizharasan, Cecilia Ferrando, Deep Chakraborty and Matheus Gadelha for providing useful feedback and input to our project. We acknowledge funding from the EU H2020 Research and Innovation Programme and the Republic of Cyprus through the Deputy Ministry of Research, Innovation and Digital Policy (GA 739578).
           </div>
         </div>
             
