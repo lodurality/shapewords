@@ -1,1 +1,721 @@
-test
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="3D-aware text-to-image generation via shape mapping into text embeddings">
+  <meta name="keywords" content="ShapeWords, Text-to-Image, Image Generation, diffusion models">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GEM3D: Generative Medial Abstractions for 3D Shape Synthesis </title>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G1RCZMLVSR"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-G1RCZMLVSR');
+    </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">ShapeWords: Guiding Text-to-Image Synthesis with 3D Shape-Aware Prompts</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://lodurality.github.io/">Dmitry Petrov</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://www.linkedin.com/in/pradyumn-goyal/">Pradyumn Goyal</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://www.linkedin.com/in/divyanshshivashok">Divyansh Shivashok</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://scholar.google.com/citations?user=dwIyWrEAAAAJ&hl=en">Yuanming Tao</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://melinos.github.io/">Melinos Averkiou</a><sup>2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://kalo-ai.github.io/">Evangelos Kalogerakis</a><sup>1,2,3</sup>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>UMass Amherst&nbsp;&nbsp;&nbsp;</span>
+            <span class="author-block"><sup>2</sup>CYENS CoE&nbsp;&nbsp;&nbsp;</span>
+             <span class="author-block"><sup>3</sup>TU Crete</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <!--<span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a> -->
+              </span>
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark" disabled>
+                  <span class="icon" disable="true">
+                      <i class="fa fa-cogs"></i>
+                  </span>
+                  <span>Demo</span>
+                  </a>
+              </span>
+              <!-- Code Link. -->
+               <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark" disabled>
+                  <span class="icon" disable="true">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              
+              <!-- Dataset Link. -->
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark" disabled>
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Data</span>
+                  </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <!-- <video poster="" id="tree" autoplay controls muted loop height="100%"> -->
+        <!-- Your video here -->
+        <!-- <source src="static/videos/banner_video.mp4"
+        type="video/mp4"> -->
+          <img src="static/teaser/teaser_web.jpg" alt="ShapeWords teaser"/>
+
+          <!-- <video controls loop>
+            <source src="static/images/teaser_vid.mov">
+            Your browser does not support the video tag.
+          </video> -->
+      <!-- </video> -->
+      <h2 class="subtitle has-text-centered">
+        <b>TLDR;</b> We introduce <em>ShapeWords</em>, an approach image generation via 3D-guided text prompts. It&nbsp;generates diverse images that are consistent both with target geometries and prompts 
+      </h2>
+    </div>
+  </div>
+</section>
+
+
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <h2 class="subtitle has-text-centered"><em>ShapeWords</em> generalize across styles and compositional settings (guided word is shown in <b>bold</b>)</h2>
+      <div id="results-carousel-face" class="carousel results-carousel">
+        <div class="item chair-bosch">
+          <div class="carousel-content">
+          <h3 class="subtitle has-text-centered">
+        <q>A Hieronymus Bosch's painting of a <b>chair</b></q>
+      </h3>
+            <img src="static/images/examples/avocado_bosch.jpg"
+                   alt="Bosch avocado chair"/>
+          </div>
+        </div>
+        <div class="item chair-malevich">
+          <div class="carousel-content">
+            <h3 class="subtitle has-text-centered">
+        <q>A Kazimir Malevich's painting of a <b>chair</b></q>
+      </h3>
+            <img src="static/images/examples/avocado_malevich.jpg"
+                   alt="Malevich avocado chair"/>
+          </div>
+        </div>
+        <div class="item chair-beach">
+          <div class="carousel-content">
+            <h3 class="subtitle has-text-centered">
+        <q>A photo of a <b>chair</b> on a beach</q>
+      </h3>
+            <img src="static/images/examples/avocado_beach.jpg"
+                   alt="A chair on a beach"/>
+          </div>
+        </div>
+        <div class="item chair-lowpoly">
+          <div class="carousel-content">
+             <h3 class="subtitle has-text-centered">
+        <q>A low poly 3D rendering of a <b>chair</b></q>
+      </h3>
+            <img src="static/images/examples/avocado_lowpoly.jpg"
+                   alt="A low poly rendering of a chair"/>
+          </div>
+        </div>
+        
+        
+        <div class="item car-box">
+          <div class="carousel-content">
+            <h3 class="subtitle has-text-centered">
+        <q>A toy <b>car</b> in a box</q><br>&nbsp;
+      </h3>
+            <img src="static/images/examples/car_box.jpg"
+                   alt="A toy car in a box"/>
+          </div>
+        </div>
+        
+         <div class="item car-cyberpunk">
+          <div class="carousel-content">
+            <h3 class="subtitle has-text-centered">
+        <q>A <b>car</b> on cyberpunk megapolis street</q>
+      </h3>
+            <img src="static/images/examples/car_cyberpunk.jpg"
+                   alt="A car on cyberpunk megapolis street"/>
+          </div>
+        </div>
+        
+        <div class="item car-vector">
+          <div class="carousel-content">
+            <h3 class="subtitle has-text-centered">
+        <q>A vector graphic of a <b>car</b></q>
+      </h3>
+            <img src="static/images/examples/car_vector.jpg"
+                   alt="A vector graphic of a car"/>
+          </div>
+        </div>
+        
+        <div class="item car-submerged">
+          <div class="carousel-content">
+            <h3 class="subtitle has-text-centered">
+        <q>A halfway submerged <b>car</b></q>
+      </h3>
+            <img src="static/images/examples/car_submerged.jpg"
+                   alt="A halfwaysubmerged car"/>
+          </div>
+        </div>
+        
+        <div class="item table-workshop">
+         <div class="carousel-content">
+            <h3 class="subtitle has-text-centered">
+        <q>A <b>table</b> in a workshop</q><br>&nbsp;
+      </h3>
+            <img src="static/images/examples/table_workshop.jpg"
+                   alt="A table in a workshop"/>
+          </div>
+        </div>
+        
+        <div class="item table-tea">
+          <div class="carousel-content">
+            <h3 class="subtitle has-text-centered">
+        <q>A person drinking tea at a <b>table</b></q>
+      </h3>
+            <img src="static/images/examples/table_tea.jpg"
+                   alt="A person drinking tea at a table"/>
+          </div>
+        </div>
+        
+        <div class="item table-coloring">
+          <div class="carousel-content">
+            <h3 class="subtitle has-text-centered">
+        <q>A coloring book illustration of a <b>table</b></q>
+      </h3>
+            <img src="static/images/examples/table_coloring.jpg"
+                   alt="A coloring book illustration of a table"/>
+          </div>
+        </div>
+        
+        <div class="item table-monet">
+          <div class="carousel-content">
+            <h3 class="subtitle has-text-centered">
+        <q>Claude Monet's painting of a <b>table</b></q>
+      </h3>
+            <img src="static/images/examples/table_monet.jpg"
+                   alt="Claude Monet's painting of a table"/>
+          </div>
+        </div>
+        
+        <div class="item lamp-charcoal">         <div class="carousel-content">
+            <h3 class="subtitle has-text-centered">
+        <q>A charcoal drawing of a <b>lamp</b></q>
+      </h3>
+            <img src="static/images/examples/lamp_charcoal.jpg"
+                   alt="A charcoal drawing of a lamp"/>
+          </div>
+        </div>
+        <div class="item lamp-artdeco">
+          <div class="carousel-content">
+            <h3 class="subtitle has-text-centered">
+        <q>An Art Deco poster of a <b>lamp</b></q>
+      </h3>
+            <img src="static/images/examples/lamp_artdeco.jpg"
+                   alt="An Art Deco poster of a lamp"/>
+          </div>
+        </div>
+        <div class="item lamp-craftsman">
+          <div class="carousel-content">
+            <h3 class="subtitle has-text-centered">
+        <q>A craftsman working on a <b>lamp</b></q>
+      </h3>
+            <img src="static/images/examples/lamp_craftsman.jpg"
+                   alt="A craftsman working on a lamp"/>
+          </div>
+        </div>
+        <div class="item lamp-tree">
+          <div class="carousel-content">
+            <h3 class="subtitle has-text-centered">
+        <q>A <b>lamp</b> under a tree </q> <br>&nbsp;&nbsp;&nbsp;&nbsp;
+      </h3>
+            <img src="static/images/examples/lamp_tree.jpg"
+                   alt="A lamp under a tree"/>
+          </div>
+        </div>
+            </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+         <p>
+ShapeWords incorporates target 3D shape information within specialized tokens embedded together with the input text, effectively blending 3D shape awareness with textual context to guide the image synthesis process. Unlike conventional shape guidance methods that rely on depth maps restricted to fixed viewpoints and often overlook full 3D structure or textual context, ShapeWords generates diverse yet consistent images that reflect both the target shape’s geometry and the textual description. Our experimental results show that ShapeWords produces images that are more text-compliant, aesthetically plausible, while also maintaining 3D shape awareness.
+        </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+    </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-five-fifths">
+        <h2 class="title is-3">How it works</h2>
+        
+        <div class="content has-text-justified">
+        <div class="columns is-vcentered interpolation-panel">
+          <div class="column is-full-width has-text-justified">
+            <img src="static/images/arch_web.png" alt="Method Overview">
+            <p> During training (I), <em>ShapeWords</em> takes as input triplet of a shape, a prompt, and an image. The shape S and prompt T are encoded using the shape encoder PointBert and the text encoder OpenCLIP, respectively. The resulting embeddings are passed through a cross-attention-based Shape2CLIP module, which produces a prompt residual δT to guide the source prompt toward the target geometry. This modified prompt is then passed as input to a Text-to-Image Denoising UNet along with sampled noisy image latents and time step t. The Shape2CLIP module is optimized via Score Distillation Sampling. During inference (II), the CLIP embeddings of the input prompt and the a            rget embeddings of the test shape are passed through the Shape2CLIP module. Optionally, the desired strength of the shape guidance is controlled by the user parameter λ. For additional details about training data and implementation please refer to the paper.   <p>
+          </div>
+        </div>
+            
+          </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+    </div>
+</section>
+
+
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <!-- Paper video. -->
+
+      <div class="columns is-centered has-text-justified">
+        <div class="column is-four-fifths">
+           <h2 class="title is-3 has-text-centered">Results</h2>
+                  <h2><p> Overall, <em>ShapeWords</em> presents an argument for <em>soft</em> structural guidance for text-to-image synthesis. In contrast to <em>hard</em> structural guidance like depth images, canny edges or renders, it allows users to explore variations of target geometries via manipulation of guidance strength  <b>λ</b>. We illustrate this below. To change the target shape, use the top slider. To change guidance strength <b>λ</b> in increments of&nbsp;0.2, use the bottom slider. </p></h2>
+                  <br>
+          <table border="0" style="margin-left: auto; margin-right: auto; width: 100%;">
+               <!-- Multi-Concept Control Row -->
+               <!-- Multi-Concept Control Row -->
+               <tr>
+
+                   <!-- <td>
+                       <img id="image-horses" src="supp/horses_6_20.png" alt="Multi-Concept 1">
+                       <br>Horse<br> <br>
+                       Orientation <input type="range" id="slider-horsesa" min="2" max="10" step="2">
+                       <br>Illumination <input type="range" id="slider-horsesb" min="14" max="27">
+                   </td> -->
+                   <td style="padding: 5px;">
+                       <p style="font-family: Courier; font-size: 18px;"><q>An aquarelle drawing of a&nbsp;<b>chair</b></q></p>
+                       <br>
+                       <img id="image-aquarelle" src="mult_sliders/aquarelle_0_5.jpg" alt="Aquarelle">
+                       <br>
+                       Target shape&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="range" id="slider-aquarellea" min="0" max="4" value="0">
+                       <br>  
+                       Guidance&nbsp;strength&nbsp;&nbsp;<b>0&nbsp;<input type="range" id="slider-aquarelleb" min="0" max="5" value="5"><b>&nbsp;1&nbsp;</b>
+                       <br>
+                       <br>
+                            </td>
+                   <td style="padding: 5px;">
+                       <p style="font-family: Courier; font-size: 18px;"><q>A vector graphic of a <b>car</b></q></p>
+                       <br>
+                       <img id="image-vector" src="mult_sliders/vector_0_5.jpg" alt="Aquarelle">
+                       <br>
+                       Target shape&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="range" id="slider-vectora" min="0" max="4" value="0">
+                       <br>  
+                       Guidance&nbsp;strength&nbsp;&nbsp;<b>0&nbsp;<input type="range" id="slider-vectorb" min="0" max="5" value="5"><b>&nbsp;1&nbsp;</b>
+                       <br>
+                       <br>
+                            </td>
+                            
+                    
+               </tr>
+               
+               <tr>
+
+                   <!-- <td>
+                       <img id="image-horses" src="supp/horses_6_20.png" alt="Multi-Concept 1">
+                       <br>Horse<br> <br>
+                       Orientation <input type="range" id="slider-horsesa" min="2" max="10" step="2">
+                       <br>Illumination <input type="range" id="slider-horsesb" min="14" max="27">
+                   </td> -->
+                   <td style="padding: 5px;">
+                       <p style="font-family: Courier; font-size: 18px;"><q>A charcoal drawing of a <b>lamp</b></q></p>
+                       <br>
+                       <img id="image-charcoal" src="mult_sliders/charcoal_0_5.jpg" alt="Charcoal lamp">
+                       <br>
+                       Target shape&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="range" id="slider-charcoala" min="0" max="4" value="0">
+                       <br>  
+                       Guidance&nbsp;strength&nbsp;&nbsp;<b>0&nbsp;<input type="range" id="slider-charcoalb" min="0" max="5" value="5"><b>&nbsp;1&nbsp;</b>
+                       <br>
+                       <br>
+                            </td>
+                   <td style="padding: 5px;">
+                       <p style="font-family: Courier; font-size: 18px;"><q>A low poly 3D rendering of a <b>bag</b></q></p>
+                       <br>
+                       <img id="image-lowpoly" src="mult_sliders/lowpoly_0_5.jpg" alt="Low poly bag">
+                       <br>
+                       Target shape&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="range" id="slider-lowpolya" min="0" max="4" value="0">
+                       <br>  
+                       Guidance&nbsp;strength&nbsp;&nbsp;<b>0&nbsp;<input type="range" id="slider-lowpolyb" min="0" max="5" value="5"><b>&nbsp;1&nbsp;</b>
+                       <br>
+                       <br>
+                            </td>
+                            
+                    
+               </tr>
+               
+               
+               <tr>
+
+                   <!-- <td>
+                       <img id="image-horses" src="supp/horses_6_20.png" alt="Multi-Concept 1">
+                       <br>Horse<br> <br>
+                       Orientation <input type="range" id="slider-horsesa" min="2" max="10" step="2">
+                       <br>Illumination <input type="range" id="slider-horsesb" min="14" max="27">
+                   </td> -->
+                   <td style="padding: 5px;">
+                       <p style="font-family: Courier; font-size: 18px;"><q>A Hieronymus Bosch's painting of a <b>chair</b></q></p>
+                       <br>
+                       <img id="image-bosch" src="mult_sliders/bosch_0_5.jpg" alt="Bosch's chair">
+                       <br>
+                       Target shape&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="range" id="slider-boscha" min="0" max="4" value="0">
+                       <br>  
+                       Guidance&nbsp;strength&nbsp;&nbsp;<b>0&nbsp;<input type="range" id="slider-boschb" min="0" max="5" value="5"><b>&nbsp;1&nbsp;</b>
+                       <br>
+                       <br>
+                            </td>
+                   <td style="padding: 5px;">
+                       <p style="font-family: Courier; font-size: 18px;"><q>A concept art of futuristic <b>furniture</b></q></p>
+                       <br>
+                       <img id="image-concept" src="mult_sliders/concept_0_5.jpg" alt="Concept art of furniture">
+                       <br>
+                       Target shape&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="range" id="slider-concepta" min="0" max="4" value="0">
+                       <br>  
+                       Guidance&nbsp;strength&nbsp;&nbsp;<b>0&nbsp;<input type="range" id="slider-conceptb" min="0" max="5" value="5"><b>&nbsp;1&nbsp;</b>
+                       <br>
+                       <br>
+                            </td>
+                            
+                    
+               </tr>
+               
+           </table>
+          
+           <script>
+               // JavaScript code will go here
+               // Function to update the image source
+           function updateImage(sliderId, imageId, baseName) {
+               // illumination_strings = ["taxis_", "lions_8_", "car_10_", "tiger_10_", "table_10_"]
+               // var sliderValue = 0;
+               // console.log(baseName)
+               // if(illumination_strings.includes(baseName)){
+                 // /sliderValue = 14 + 27 - document.getElementById(sliderId).value;
+               // }/
+               // else if(baseName=="vacuum_10_"){
+                 // sliderValue = 16 + 27 - document.getElementById(sliderId).value;
+               // }
+               // else{
+                 sliderValue = document.getElementById(sliderId).value;
+               // }
+               // if(baseName.includes(dollyzoom))
+               var newImagePath = "sliders/" + baseName + sliderValue + ".jpg";
+               // console.log(newImagePath) // Adjust this path as per your images
+
+
+               document.getElementById(imageId).src = newImagePath;
+           }
+
+           // Attach event listeners to each slider
+
+           function updateMultiConceptImage(baseId, baseName) {
+               var sliderValueA = document.getElementById(baseId + "a").value;
+
+               //illumination_strings = ["aquarelle"]
+               //var sliderValueB = 0;
+               // console.log(baseName)
+               var sliderValueB = document.getElementById(baseId + "b").value;
+               
+               // var sliderValueB = document.getElementById(baseId + "b").value;
+               var newImagePath = "mult_sliders/" + baseName + "_" + sliderValueA + "_" + sliderValueB + ".jpg";
+               // console.log("image-" + baseId) // Adjust this path as per your images
+               document.getElementById("image-" + baseName).src = newImagePath;
+           }
+
+           function attachMultiConceptSliderEvents(baseId, baseName) {
+               var sliderA = document.getElementById("slider-" + baseId + "a");
+               var sliderB = document.getElementById("slider-" + baseId + "b");
+
+               sliderA.addEventListener("input", function() {
+                   updateMultiConceptImage("slider-" + baseId, baseName);
+               });
+
+               sliderB.addEventListener("input", function() {
+                   updateMultiConceptImage("slider-" + baseId, baseName);
+               });
+           }
+           function attachSliderEvents() {
+               var sliders = ["aquarelle_chair1"];
+                 attachMultiConceptSliderEvents("aquarelle", "aquarelle");
+                  attachMultiConceptSliderEvents("vector", "vector");
+                  attachMultiConceptSliderEvents("charcoal", "charcoal");
+                   attachMultiConceptSliderEvents("lowpoly", "lowpoly");
+                   attachMultiConceptSliderEvents("bosch", "bosch");
+                    attachMultiConceptSliderEvents("concept", "concept");
+               sliders.forEach(function(slider) {
+                   document.getElementById("slider-" + slider).addEventListener("input", function() {
+                       updateImage("slider-" + slider, "image-" + slider, slider + "_");
+                   });
+               });
+
+               // attachMultiConceptSliderEvents("horses", "horses");
+              attachMultiConceptSliderEvents("aquarelle", "aquarelle");
+              // attachMultiConceptSliderEvents("seagull", "seagull");
+           }
+           document.addEventListener("DOMContentLoaded", attachSliderEvents);
+
+           // Initialize the sliders once the window is loaded
+           window.onload = attachSliderEvents;
+
+           </script>
+
+
+          <!-- </div> -->
+        </div>
+        <!-- <div class="column is-four-fifths">
+          <img src="static/images/results.pdf" alt="3DMiner Overview"/>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End youtube video -->
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Generalization to compositional prompts</h2>
+        <div class="content has-text-justified">
+        <div class="columns is-vcentered interpolation-panel">
+          <div class="column is-full-width has-text-justified">
+            
+                  <div>
+                  
+                  <img src="static/images/comp_prompts.png" alt="Method Overview">
+     
+            
+            <p>We compare ShapeWords with depth-conditioned baselines on compositional prompts that involve a target 3D shape alongside additional objects or humans interacting with it. Over-constrained depth conditioned baselines (e.g. ControlNet and Ctrl-X@60) ignore prompt composition. Under-constrained depth baselines (e.g. CNet-Stop@30 or Ctrl-X@30) stray too much from target geometry. <em>ShapeWords</em> provides non-superficial generalization to compositional prompts and strong adherence to target shape. We stress out that depth is only provided as input for baselines and <b>ShapeWords does not use depth input</b>. </p>
+          </div>
+        </div>
+            
+          </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+    </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Ablation: token replacement strategies</h2>
+        <div class="content has-text-justified">
+        <div class="columns is-vcentered interpolation-panel">
+          <div class="column is-full-width has-text-justified">
+            
+                  <div>
+                  
+                  <img src="static/images/token_strategies.png" alt="Method Overview">
+     
+            
+            <p>We qualitatively compare the following strategies for guidance: adding the prompt delta δT to all prompt embeddings; adding it to only the object word embedding; adding it only to EOS token embedding; adding it to both EOS and object token embeddings (as done in the main paper). Prompts are: <q>a charcoal drawing of <b>chair</b></q> (top row), <q>Hieronymus Bosch's painting of a <b>chair</b></q> (middle row), <q>a <b>chair</b> under a tree</q> (bottom row). Target shapes are shown on the left. Compared to modifying the object and EOS tokens, the <q>all tokens</q> strategy produces over-smoothed images; the <q>object only token</q> strategy struggles to incorporate stylistic cues from the text into geometry; and the <q>EOS token</q> strategy struggles with preserving the target shape geometry. </p>
+          </div>
+        </div>
+            
+          </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+    </div>
+</section>
+
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Failure cases</h2>
+        <div class="content has-text-justified">
+        <div class="columns is-vcentered interpolation-panel">
+          <div class="column is-full-width has-text-justified">
+            
+                  <div>
+                  
+                  <img src="static/images/failure_geometry.png" alt="Method Overview">
+     
+            
+            <p><b>Failure cases -- shape adherence.</b> Our model struggles to generalize to shapes with complex fine-grained geometries (e.g. a lot of thin parts or lot of holes). 
+            Prompts for the shapes are: <q>a <b>chair</b></q> (first two shapes); <q>a <b>lamp</b></q> (last three shapes). Target shapes are shown on the top. </p>
+            <br>
+          </div>
+          
+                  <div>
+                  
+                  <img src="static/images/failure_prompts.png" alt="Method Overview">
+     
+            
+            <p><b>Failure cases -- prompt adherence.</b> Our model struggles to generalize to out-of-distribution prompts that require local adjustments of surface geometry. Prompts are: <q>an origami of a <b>chair</b></q> (top); <q>a diamond sculpture of a <b>chair</b></q> (middle); <q>a hieroglyph of a <b>chair</b></q> (bottom). Target shapes are shown on the right. Note that results for intermediate guidance strength suggest that our model can still generalize to such prompts to some extent. We suspect that this issue could potentially be alleviated by using more diverse training data. </p>
+          </div>
+          
+        </div>
+            
+          </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+    </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Acknowledgements</h2>
+        <div class="content has-text-justified">
+        <div class="columns is-vcentered interpolation-panel">
+          <div class="column is-full-width has-text-justified">
+            
+            <div>
+            
+            We thank Vikas Thamizharasan, Cecilia Ferrando and Matheus Gadelha for providing useful feedback and input to our project.
+          </div>
+        </div>
+            
+          </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+    </div>
+    </div>
+</section>
+
+<!--
+</section>
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop">
+  <div class="columns is-centered ">
+      <div class="column is-four-fifths">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@misc{petrov2024shapewords,
+}</code></pre>
+  </div>
+  </div>
+  </div>
+</section>
+-->
+
+<footer class="footer">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content has-text-centered has-text-justified">
+            
+      	  <p>
+              The code of this website is heavily based on <a href="https://nerfies.github.io/">Nerfies project</a>. Teaser carousel uses code from <a href="https://textual-inversion.github.io/">Textual Inversion website</a>. Results's sliders are adapted from <a href="https://ttchengab.github.io/continuous_3d_words/">Continuous 3D Words website</a>. We thank authors for their contributions to the community. 
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
